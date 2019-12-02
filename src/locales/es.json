@@ -1,0 +1,11 @@
+{
+	"Position": "#",
+	"Name": "Nombre",
+	"Directed by": "Dirigido por",
+	"Country": "País",
+	"Budget": "Presupuesto",
+	"Release": "Lanzamiento",
+	"Views": "Vistas",
+    "One": " millón",
+    "Other": " millones"
+}
