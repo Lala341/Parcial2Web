@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import {IntlProvider} from 'react-intl';
+import * as serviceWorker from './serviceWorker';
 
 import PeliList from "./components/peliList";
 import localeEsMessages from "./locales/es";
@@ -35,3 +36,4 @@ ReactDOM.render(
 		<PeliList/>
 	</IntlProvider>, document.getElementById("root")
 );
+serviceWorker.register();

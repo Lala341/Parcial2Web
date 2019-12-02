@@ -29,15 +29,23 @@ export default class PeliList extends React.Component {
     if (!navigator.onLine) {
         if (localStorage.getItem('list') === null)
             this.setState({ list: [] })
-        else
-            this.setState({ list: JSON.parse(localStorage.getItem('list')), selected: [JSON.parse(localStorage.getItem('list')[0])]});
-
+        else{
+          var u=JSON.parse(localStorage.getItem('list'));
+          var p=[u[0]];
+            this.setState({ list: u, selected:p });
+          }
         if (localStorage.getItem('listen') === null)
             this.setState({ listen: [] })
-        else
-            this.setState({ listen: JSON.parse(localStorage.getItem('listen')), selected: [JSON.parse(localStorage.getItem('list')[0])] });
-    }
-  
+        else{
+          var u2=JSON.parse(localStorage.getItem('listen'));
+          var p=[u2[0]];
+            this.setState({ listen: u2, selected: p });
+          }
+          this.getGraph(u,u2);
+          }
+          
+          
+  else{
 
     fetch("https://gist.githubusercontent.com/josejbocanegra/8b436480129d2cb8d81196050d485c56/raw/48cc65480675bf8b144d89ecb8bcd663b05e1db0/data-en.json")
       .then(res => {
@@ -47,7 +55,7 @@ export default class PeliList extends React.Component {
           console.log(JSON.stringify(res));
           this.setState({ list: res ,selected:[res[0]]});
           localStorage.setItem('list', JSON.stringify(res));
-          this.drawChart(res);
+          
 
       });
       fetch("https://gist.githubusercontent.com/josejbocanegra/f784b189117d214578ac2358eb0a01d7/raw/2b22960c3f203bdf4fac44cc7e3849689218b8c0/data-es.json")
@@ -60,7 +68,7 @@ export default class PeliList extends React.Component {
           localStorage.setItem('listen', JSON.stringify(res));
           this.drawChart(res);
       });
-      
+    }
   }
   
 drawChart(data) {
@@ -70,7 +78,7 @@ drawChart(data) {
 
         const width = 700;
         const height = 500;
-        const margin = { top:10, left:50, bottom: 40, right: 10};
+        const margin = { top:10, left:70, bottom: 40, right: 10};
         const iwidth = width - margin.left - margin.right;
         const iheight = height - margin.top -margin.bottom;
         
@@ -81,8 +89,8 @@ drawChart(data) {
         
          const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
                 const y = d3.scaleLinear() 
-                .domain([0, 30])
-                .range([iheight, 0]);
+                .domain([0, 10000000])
+                .range([ iheight,0]);
             
             const x = d3.scaleBand()
             .domain(data.map(d => d.id) ) 
@@ -93,11 +101,11 @@ drawChart(data) {
         
         bars.enter().append("rect")
         .attr("class", "bar")
-        .style("fill", "steelblue")
+        .style("fill", "green")
         .attr("x", d => x(d.id))
         .attr("y", d => y(d.views))
-        .attr("height", d => iheight - y(d.views))
-        .attr("width", x.bandwidth())
+        .attr("height", d => iheight-y(d.views))
+        .attr("width", x.bandwidth());
         
         
         g.append("g")
@@ -107,8 +115,9 @@ drawChart(data) {
         
         g.append("g")
         .classed("y--axis", true)
-        .call(d3.axisLeft(y));
-
+        .call(d3.axisLeft(y))
+        ;  
+        
 
       
      
@@ -135,7 +144,18 @@ var y;
     
   return m;
   }
-  
+  getGraph(u1,u2){
+    var u=navigator.language|| navigator.userLanguage;
+
+    var m;
+    if(u==="es-ES"){
+        m=u1;
+        
+    }else{
+      m=u2;
+  }
+    this.drawChart(m);
+  }
   render() {
 		this.handleRowClick=this.handleRowClick.bind(this);
 
